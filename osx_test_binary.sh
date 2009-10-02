@@ -11,14 +11,7 @@ if [ "$1" != "" ]; then
 		exit 1
 	fi
 else
-	olxdir="$(guess_olx_dir)"
-	
-	if ! is_olx_dir "$olxdir"; then
-		echo "Cannot find openlierox dir. Fix functions.sh."
-		exit 1
-	fi
-
-	bin="${olxdir}/build/Xcode/build/Release/OpenLieroX.app"
+	bin="$(get_olx_macosx_bin)"
 	
 	if ! is_olx_macosx_bin "$bin"; then
 		echo "Guessed filename $bin is not a MacOSX binary."
@@ -42,7 +35,7 @@ for fr in $frameworks; do
 	mv "/Library/Frameworks/$fr" "${libtmpdir}/" || ret=1
 done
 
-"${bin}/Contents/MacOS/OpenLieroX" -exec quit || {
+test_olx_bin "${bin}/Contents/MacOS/OpenLieroX" || {
 	echo "Error while running OpenLieroX."
 	ret=1
 }

@@ -21,3 +21,19 @@ function is_olx_macosx_bin() {
 	return 1
 }
 
+# returns olx macosx .app bundle
+# optional $1 - olxdir
+function get_olx_macosx_bin() {
+	if [ "$1" != "" ]; then
+		olxdir="$1"
+	else
+		olxdir="$(guess_olx_dir)"	
+	fi
+	echo "${olxdir}/build/Xcode/build/Release/OpenLieroX.app"
+}
+
+# $1 - binary
+function test_olx_bin() {
+	"$1" -exec quit || return 1
+	return 0
+}

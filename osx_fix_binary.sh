@@ -1,13 +1,35 @@
 #!/bin/bash
 
-cd build
+source "$(dirname "$0")"/functions.sh
 
-for rel in *; do
-	cd $rel
-	if [ -e OpenLieroX.app ]; then
+if [ "$1" != "" ]; then
+	bin="$1"
+	# if no absolute filename, add $(pwd)
+	[ "$(echo "$bin" | head -c 1)" != "/" ] && bin="$(pwd)/$1"
+	if ! is_olx_macosx_bin "$bin"; then
+		echo "Given parameter $bin is not a MacOSX binary."
+		exit 1
+	fi
+else
+	bin="$(get_olx_macosx_bin)"
+	
+	if ! is_olx_macosx_bin "$bin"; then
+		echo "Guessed filename $bin is not a MacOSX binary."
+		exit 1
+	fi	
+fi
+
+olxdir="$(guess_olx_dir)"
+
+cd "$bin/.."
+
+if [ ! -d "OpenLieroX.app" ]; then
+	echo "OpenLieroX.app not found in $bin/.."
+	exit 1
+fi
 
 		echo ">>> copying gamedir"
-		rsync -a --delete --exclude=.pyc --exclude=gmon.out --exclude=.svn ../../../../share/gamedir OpenLieroX.app/Contents/Resources/
+		rsync -a --delete --exclude=.pyc --exclude=gmon.out --exclude=.svn "$olxdir"/share/gamedir OpenLieroX.app/Contents/Resources/
 
 		for framework in \
 			GD.framework/Versions/2.0/GD \
@@ -37,6 +59,3 @@ for rel in *; do
 				done
 			done
 		done
-	fi
-	cd ..
-done
