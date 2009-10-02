@@ -1,7 +1,7 @@
 #!/bin/bash
 
-distribdir="$(dirname "$0")"
-cd "${distribdir}"
+cd "$(dirname "$0")"
+distribdir="$(pwd)"
 
 source functions.sh
 
@@ -14,8 +14,4 @@ fi
 
 cd "${olxdir}/build/Xcode"
 
-xcodebuild -target OpenLieroX -configuration Release || {
-	echo "MacOSX building failed."
-	exit 1
-}
-
+"${distribdir}"/osx_fix_binary.sh
