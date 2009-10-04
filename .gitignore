@@ -1,4 +1,4 @@
-# the osx_pack.sh script will create a DMG
 *.dmg
+*.zip
 
 *~
