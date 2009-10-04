@@ -51,13 +51,21 @@ function get_olx_targetname() {
 	echo "OpenLieroX $(get_olx_human_version)"
 }
 
+function guess_sfuser() {
+	[ "$sfuser" != "" ] && echo "$sfuser" && return 0
+	[ "$(whoami)" == "az" ] && echo "albertzeyer,openlierox" && return 0
+	[ "$(hostname | grep "albert")" != "" ] && echo "albertzeyer,openlierox" && return 0
+	# add more checks for yourself here
+	echo "WASNOTABLETODETYOURSFUSERNAME"
+}
+
 function upload_to_frs() {
 	[ ! -e "$1" ] && {
 		echo "upload_to_frs: $1 not found"
 		return 1
 	}
 
-	[ "$sfuser" = "" ] && [ "$(whoami)" == "az" ] && sfuser="albertzeyer,openlierox"
+	[ "$sfuser" = "" ] && sfuser="$(guess_sfuser)"
 	[ "$group" = "" ] && group="openlierox"
 	[ "$release" = "" ] && release="OpenLieroX $(get_olx_human_version)"
 
