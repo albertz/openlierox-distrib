@@ -34,42 +34,57 @@ olxbin="$(get_olx_macosx_bin "$olxdir")"
 
 # Creates a disk image (dmg) on Mac OS X from the command line.
 # usage:
-#    mkdmg <volname> <vers> <srcdir>
+#    mkdmg <volname> <dmgname> <srcdir>
 #
 # Where <volname> is the name to use for the mounted image, <vers> is the version
 # number of the volume and <srcdir> is where the contents to put on the dmg are.
 #
-# The result will be a file called <volname>-<vers>.dmg
+# The result will be a file called <dmgname>.dmg
 mkdmg() {
 
-	if [ $# != 2 ]; then
-		echo "usage: mkdmg volname srcdir"
-		exit 0
+	if [ $# != 3 ]; then
+		echo "usage: mkdmg volname dmgname srcdir"
+		exit 1
 	fi
-
+	
 	VOL="$1"
-	FILES="$2"
+	DMG="$2"
+	FILES="$3"
+	DMGTMP="tmp-$DMG"
 
-	DMG="tmp-$VOL.dmg"
+	if [ "$(echo "$DMG" | grep ".dmg")" == "" ]; then
+		echo "mkdmg: dmg-filename $DMG is invalid, must have .dmg ending"
+		exit 1
+	fi
 
 	# create temporary disk image and format, ejecting when done
 	SIZE=$(du -sk ${FILES} | cut -f 1)
 	SIZE=$((${SIZE}/1000+5))
-	hdiutil create "$DMG" -megabytes ${SIZE} -ov -type UDIF -fs HFS+ -volname "$VOL"
+	hdiutil create "$DMGTMP" -megabytes ${SIZE} -ov -type UDIF -fs HFS+ -volname "$VOL" || {
+		echo "mkdmg: could not create temp dmg"
+		exit 1
+	}
 
 	# mount and copy files onto volume
-	hdid "$DMG"
+	hdid "$DMGTMP" || {
+		echo "mkdmg: could not mount temp dmg"
+		exit 1
+	}
 	echo -n "copying files ... "
-	cp -R "${FILES}"/* "/Volumes/$VOL/"
+	cp -R "${FILES}"/* "/Volumes/$VOL/" || {
+		echo "mkdmg: error while copying files"
+		exit 1
+	}
 	echo "ready"
 	hdiutil eject "/Volumes/$VOL"
-	#osascript -e "tell application "Finder" to eject disk "$VOL"" && 
 
 	# convert to compressed image, delete temp image
-	rm -f "${VOL}.dmg"
-	hdiutil convert "$DMG" -format UDZO -o "${VOL}.dmg"
 	rm -f "$DMG"
-
+	hdiutil convert "$DMGTMP" -format UDZO -o "$DMG" || {
+		echo "mkdmg: error while creating compressed dmg"
+		exit 1
+	}
+	rm -f "$DMGTMP"
 }
 
 mkdir -p dmg || {
@@ -81,8 +96,14 @@ olxtargetname="$(get_olx_targetname)"
 
 echo "** preparing release DMG"
 mkdir -p "dmg/${olxtargetname}.app"
-rsync -a --delete "$olxbin/"* "dmg/${olxtargetname}.app"
-mkdmg "$olxtargetname" dmg
+rsync -a --delete "$olxbin/"* "dmg/${olxtargetname}.app" || {
+	echo "osx_pack: error while copying binary"
+	exit 1
+}
+mkdmg "$olxtargetname" "$(get_olx_osx_fn)" dmg || {
+	echo "osx_pack: error while creating DMG"
+	exit 1
+}
 rm -rf dmg
 
 echo "** ready"

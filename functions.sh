@@ -39,7 +39,7 @@ function test_olx_bin() {
 }
 
 function get_olx_version() {
-	[ "$olxdir" == "" ] && olxdir="$(guess_olx_dir)"
+	[ "$olxdir" = "" ] && olxdir="$(guess_olx_dir)"
 	cat "$olxdir/VERSION"
 }
 
@@ -52,11 +52,31 @@ function get_olx_targetname() {
 }
 
 function upload_to_frs() {
-	[ "$sfuser" == "" ] && [ "$(whoami)" == "az" ] && sfuser="albertzeyer,openlierox"
-	[ "$group" == "" ] && group="openlierox"
-	[ "$release" == "" ] && release="OpenLieroX $(get_olx_human_version)"
+	[ "$sfuser" = "" ] && [ "$(whoami)" == "az" ] && sfuser="albertzeyer,openlierox"
+	[ "$group" = "" ] && group="openlierox"
+	[ "$release" = "" ] && release="OpenLieroX $(get_olx_human_version)"
 
 	echo "* uploading $1 to $group / $release ..."
 	rsync -avP "$1" \
 	$sfuser@shell.sourceforge.net:"\"/home/frs/project/o/op/openlierox/$group/$release/\""
+}
+
+function get_olx_basefn() {
+	echo "OpenLieroX_$(get_olx_version)"
+}
+
+function get_olx_osx_fn() {
+	echo "$(get_olx_basefn).mac.dmg"
+}
+
+function get_olx_win32_fn() {
+	echo "$(get_olx_basefn).win32.zip"
+}
+
+function get_olx_win32patch_fn() {
+	echo "$(get_olx_basefn).win32.patch.zip"
+}
+
+function get_olx_win32debug_fn() {
+	echo "$(get_olx_basefn).win32.debug.zip"
 }

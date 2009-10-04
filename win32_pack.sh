@@ -1,88 +1,72 @@
-#!/bin/bash
+#!/bin/zsh
 
-function usage() {
-	echo "$0 [--win32zip] [--srctarbz] [--all]"
-	exit
-}
+cd "$(dirname "$0")"
+distribdir="$(pwd)"
 
-ENABLE_WIN32ZIP=0
-ENABLE_SRCTARBZ=0
+source functions.sh
 
-for arg in $*; do
-	case $arg in
-		--help) usage;;
-		--win32zip) ENABLE_WIN32ZIP=1;;
-		--srctarbz) ENABLE_SRCTARBZ=1;;
-		--all) ENABLE_WIN32ZIP=1; ENABLE_SRCTARBZ=1;;
-		*) usage;;
-	esac
-done
+olxdir="$(guess_olx_dir)"
+cd $olxdir
+olxdir="$(pwd)" # to have absolute filename
 
-if [ $ENABLE_WIN32ZIP == 0 ] && [ $ENABLE_SRCTARBZ == 0 ]; then
-	echo "you have to enable at least one target"
-	usage
+if ! is_olx_dir "$olxdir"; then
+	echo "Cannot find openlierox dir. Fix functions.sh."
+	exit 1
 fi
 
-VERSION="$(cat ../VERSION)"
+
+VERSION="$(get_olx_version)"
 echo ">>> preparing $VERSION archives ..."
 
-cd ..
-SRC_FILES="src include libs"
-STD_FILES="VERSION CMakeLists.txt *.sh *.bat build/Xcode/OpenLieroX-Info.plist build/Xcode/OpenLieroX.xcodeproj debian"
-DOC_FILES="COPYING.LIB DEPS doc"
-DAT_FILES="share"
+win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* ${olxdir}/bin/OpenLieroX.exe ${distribdir}/win32/*)
+win32patch_files=(${olxdir}/bin/OpenLieroX.exe ${distribdir}/win32/*)
+win32debug_files=(${olxdir}/bin/OpenLieroX.{exe,pdb,map} ${olxdir}/src ${olxdir}/include)
 
-export SRC_RELEASE="$SRC_FILES $STD_FILES $DOC_FILES $DAT_FILES"
-export WIN32_RELEASE="doc COPYING.LIB share/gamedir/* distrib/win32/*"
 
-export ARCHIVE_PREFIX="distrib/tarball/OpenLieroX_${VERSION}"
-export SRC_PREFIX="${ARCHIVE_PREFIX}.src"
-export WIN32_PREFIX="${ARCHIVE_PREFIX}.win32"
+# $1 - zip filename
+# $[1:] - array of files
+function create_archiv() {
+	files=($*)
+	files=($files[2,-1])
+	zipfile=$1
 
-# cleaning up
-rm -rf distrib/OpenLieroX 2>/dev/null
-rm ${SRC_PREFIX}.tar* 2>/dev/null
-rm ${WIN32_PREFIX}.zip 2>/dev/null
-mkdir -p distrib/tarball
+	rm -f $zipfile 2>/dev/null
+	echo ">>> creating $(basename $zipfile) ..."
 
-if [ $ENABLE_SRCTARBZ == 1 ]; then
-echo ">>> creating source tar.bz ..."
-ln -s .. distrib/OpenLieroX
-for FILE in $SRC_RELEASE; do
-	[ -e ${SRC_PREFIX}.tar ] && MOD_FLAG=-r || MOD_FLAG=-c
-	cd distrib
-	tar --exclude=.svn --exclude=*~ --exclude=*.pyc --exclude=.* $MOD_FLAG -hf \
-		../${SRC_PREFIX}.tar \
-		OpenLieroX/$FILE
+	cd ${distribdir} || {
+		echo "create_archiv: cd to distrib failed"
+		return 1
+	}
+
+	[ -d win32tmp ] && rm -rf win32tmp
+	mkdir -p win32tmp/OpenLieroX || {
+		echo "create_archiv: cannot create tmp directory"
+		return 1
+	}
+
+	for f in $files; do
+		[ "$f[1]" != "/" ] && f="${olxdir}/$f"
+		{ tar -c \
+			--exclude=.svn --exclude=.git --exclude=.pyc --exclude=~ \
+			-C "$(dirname $f)" "$(basename $f)" \
+		| tar -x -C win32tmp/OpenLieroX; } || {
+			echo "create_archiv $(basename $zipfile): Couldn't copy $f"
+			return 1
+		}
+	done
+
+	cd win32tmp
+	zip -r -9 $zipfile OpenLieroX >/dev/null || {
+		echo "create_archiv $(basename $zipfile): error while zipping"
+		return 1
+	}
 	cd ..
-done
-rm distrib/OpenLieroX
-bzip2 -9 ${SRC_PREFIX}.tar
-fi
 
-# echo ">>> creating source zip ..."
-# [ -d distrib/srctmp ] && rm -rf distrib/srctmp
-# mkdir -p distrib/srctmp
-# tar -xjf ${SRC_PREFIX}.tar.bz2 -C distrib/srctmp
-# cd distrib/srctmp
-# zip -r -9 ../../${SRC_PREFIX}.zip * >/dev/null
-# cd ../..
-# rm -rf distrib/srctmp
+	rm -rf win32tmp
 
-if [ $ENABLE_WIN32ZIP == 1 ]; then
-echo ">>> creating win32 zip ..."
-cd distrib
-[ -d OpenLieroX ] && rm -rf OpenLieroX
-mkdir OpenLieroX
-cd ..
-tar --exclude=.svn --exclude=*.pyc -c $WIN32_RELEASE | tar -x -C distrib/OpenLieroX
-cd distrib/OpenLieroX
-mv share/gamedir/* .
-rm -r share
-mv distrib/win32/* .
-rm -r distrib
-cd ..
-zip -r -9 ../${WIN32_PREFIX}.zip OpenLieroX >/dev/null
-rm -rf OpenLieroX
-# we are now in distrib again
-fi
+}
+
+
+create_archiv "${distribdir}/$(get_olx_win32patch_fn)" $win32patch_files && \
+create_archiv "${distribdir}/$(get_olx_win32_fn)" $win32_files && \
+create_archiv "${distribdir}/$(get_olx_win32debug_fn)" $win32debug_files
