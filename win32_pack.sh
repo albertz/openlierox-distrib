@@ -18,16 +18,10 @@ fi
 VERSION="$(get_olx_version)"
 echo ">>> preparing $VERSION archives ..."
 
-for fileext in exe pdb map; do
-	f="${olxdir}/bin/OpenLieroX.${fileext}"
-	[ -e $f ] && echo "rename $(basename $f)" && \
-	mv $f ${olxdir}/bin/"OpenLieroX $(get_olx_human_version).${fileext}"
-done
-
 
 win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* bin/OpenLieroX.exe ${distribdir}/win32/*)
-win32patch_files=("bin/OpenLieroX $(get_olx_human_version).exe" share/gamedir/cfg share/gamedir/data ${distribdir}/win32/*)
-win32debug_files=("bin/OpenLieroX $(get_olx_human_version)".{exe,pdb,map} bin/vc80.{pdb,idb} ${olxdir}/src ${olxdir}/include)
+win32patch_files=(bin/OpenLieroX.exe share/gamedir/cfg share/gamedir/data ${distribdir}/win32/*)
+win32debug_files=(bin/OpenLieroX.{exe,pdb,map} bin/vc80.{pdb,idb} ${olxdir}/src ${olxdir}/include)
 
 
 # $1 - zip filename
@@ -53,6 +47,10 @@ function create_archiv() {
 
 	for f in $files; do
 		[ "$f[1]" != "/" ] && f="${olxdir}/$f"
+		[ ! -e $f ] && {
+			echo "create_archiv $(basename $zipfile): cannot find $f"
+			return 1
+		}
 		{ tar -c \
 			--exclude=.svn --exclude=.git --exclude=.pyc --exclude=~ \
 			-C "$(dirname $f)" "$(basename $f)" \
@@ -62,6 +60,7 @@ function create_archiv() {
 		}
 		echo -n "+"
 	done
+	echo -n " "
 
 	cd win32tmp
 	zip -r -9 $zipfile OpenLieroX | { while read t; do echo -n "."; done; } || {
@@ -70,6 +69,7 @@ function create_archiv() {
 	}
 	cd ..
 
+	echo -n " -"
 	rm -rf win32tmp
 	echo " *"
 
