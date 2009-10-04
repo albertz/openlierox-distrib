@@ -37,3 +37,26 @@ function test_olx_bin() {
 	"$1" -exec quit || return 1
 	return 0
 }
+
+function get_olx_version() {
+	[ "$olxdir" == "" ] && olxdir="$(guess_olx_dir)"
+	cat "$olxdir/VERSION"
+}
+
+function get_olx_human_version() {
+	get_olx_version | tr "_" " "
+}
+
+function get_olx_targetname() {
+	echo "OpenLieroX $(get_olx_human_version)"
+}
+
+function upload_to_frs() {
+	[ "$sfuser" == "" ] && [ "$(whoami)" == "az" ] && sfuser="albertzeyer,openlierox"
+	[ "$group" == "" ] && group="openlierox"
+	[ "$release" == "" ] && release="OpenLieroX $(get_olx_human_version)"
+
+	echo "* uploading $1 to $group / $release ..."
+	rsync -avP "$1" \
+	$sfuser@shell.sourceforge.net:"\"/home/frs/project/o/op/openlierox/$group/$release/\""
+}

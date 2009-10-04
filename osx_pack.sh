@@ -77,8 +77,7 @@ mkdir -p dmg || {
 	exit 1
 }
 
-olxver="$(cat "$olxdir/"VERSION)"
-olxtargetname="OpenLieroX $(echo "$olxver" | tr "_" " ")"
+olxtargetname="$(get_olx_targetname)"
 
 echo "** preparing release DMG"
 mkdir -p "dmg/${olxtargetname}.app"
