@@ -1,0 +1,22 @@
+There are several scripts in this repository which should do all the compiling,
+testing, packaging and uploading to SF automatically.
+
+The functions of each scripts are:
+
+*_build.sh:
+
+This will make a release build for the specific platform.
+
+*_test_binary.sh:
+
+Expects that the binary was compiled before by *_build.sh. It will do some simple tests.
+This mostly (e.g. on OSX) means that it will try to execute the binary and quit it 
+immediatly.
+
+*_pack.sh:
+
+This runs both *_build.sh and *_test_binary.sh if possible. Then, the main functionallity 
+of this script is to generate the specific packages for the target system. (E.g. on OSX, 
+it creates the DMG, on Win32, it creates all the ZIPs, this also creates the deb-files 
+for Debian, etc.)
+	
