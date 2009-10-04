@@ -35,10 +35,8 @@ cd "$vcbuildpath"
 
 # if the task is still running, kill it
 sleep 1
-taskkill /F /IM cl.exe
+taskkill /F /IM cl.exe 2>/dev/null
 
-echo huu
-
-# note: use 'taskkill /F /IM cl.exe' to kill that
+echo "** ready"
 
 
