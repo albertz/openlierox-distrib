@@ -1,7 +1,7 @@
 #!/bin/bash
 
-distribdir="$(dirname "$0")"
-cd "${distribdir}"
+cd "$(dirname "$0")"
+distribdir="$(pwd)"
 
 source functions.sh
 
@@ -15,19 +15,30 @@ fi
 
 #vcbuild="/cygdrive/c/Program Files/Microsoft Visual Studio 8/VC/vcpackages/vcbuild.exe"
 
-cd "${olxdir}/build/msvc 2005"
+#cd "${olxdir}/build/msvc 2005"
 
 vcbuildpath="/cygdrive/c/Program Files/Microsoft Visual Studio 8/VC/vcpackages"
+#vcbuild="$vcbuildpath/vcbuild.exe"
 
+#cp "$vcbuildpath/1031/"* "$vcbuildpath/"
+
+# seems this is needed, otherwise error
+#regsvr32 /s "$vcbuildpath/vcprojectengine.dll"
+
+# we need this translation to absolute pathname so that Win CMD can handle it correctly
+cd "$olxdir"
+olxdir="$(pwd)"
+
+# start the build itself
 cd "$vcbuildpath"
-#export PATH="$vcbuildpath:$PATH"
-#export LD_LIBRARY_PATH="$vcbuildpath:$PATH"
+"${distribdir}/win32_runbuild.bat" "$(cygpath -a -w "$olxdir")/build/msvc 2005/Game.vcproj"
 
-#cmd /C "c: && pwd && cd C:/Program Files/Microsoft Visual Studio 8/VC/vcpackages && pwd"
-#"/cygdrive/c/Program Files/Microsoft Visual Studio 8/VC/vcvarsall.bat" x86
+# if the task is still running, kill it
+sleep 1
+taskkill /F /IM cl.exe
 
-#cmd /C "echo %PATH%"
+echo huu
 
-./vcbuild "Game.vcproj" "Release|Win32" #/useenv
+# note: use 'taskkill /F /IM cl.exe' to kill that
 
 
