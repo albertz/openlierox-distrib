@@ -18,9 +18,16 @@ fi
 VERSION="$(get_olx_version)"
 echo ">>> preparing $VERSION archives ..."
 
-win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* ${olxdir}/bin/OpenLieroX.exe ${distribdir}/win32/*)
-win32patch_files=(${olxdir}/bin/OpenLieroX.exe ${distribdir}/win32/*)
-win32debug_files=(${olxdir}/bin/OpenLieroX.{exe,pdb,map} ${olxdir}/src ${olxdir}/include)
+for fileext in exe pdb map; do
+	f="${olxdir}/bin/OpenLieroX.${fileext}"
+	[ -e $f ] && echo "rename $(basename $f)" && \
+	mv $f ${olxdir}/bin/"OpenLieroX $(get_olx_human_version).${fileext}"
+done
+
+
+win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* bin/OpenLieroX.exe ${distribdir}/win32/*)
+win32patch_files=("bin/OpenLieroX $(get_olx_human_version).exe" share/gamedir/cfg share/gamedir/data ${distribdir}/win32/*)
+win32debug_files=("bin/OpenLieroX $(get_olx_human_version)".{exe,pdb,map} bin/vc80.{pdb,idb} ${olxdir}/src ${olxdir}/include)
 
 
 # $1 - zip filename
@@ -53,20 +60,22 @@ function create_archiv() {
 			echo "create_archiv $(basename $zipfile): Couldn't copy $f"
 			return 1
 		}
+		echo -n "+"
 	done
 
 	cd win32tmp
-	zip -r -9 $zipfile OpenLieroX >/dev/null || {
+	zip -r -9 $zipfile OpenLieroX | { while read t; do echo -n "."; done; } || {
 		echo "create_archiv $(basename $zipfile): error while zipping"
 		return 1
 	}
 	cd ..
 
 	rm -rf win32tmp
+	echo " *"
 
 }
 
 
+create_archiv "${distribdir}/$(get_olx_win32debug_fn)" $win32debug_files && \
 create_archiv "${distribdir}/$(get_olx_win32patch_fn)" $win32patch_files && \
-create_archiv "${distribdir}/$(get_olx_win32_fn)" $win32_files && \
-create_archiv "${distribdir}/$(get_olx_win32debug_fn)" $win32debug_files
+create_archiv "${distribdir}/$(get_olx_win32_fn)" $win32_files
