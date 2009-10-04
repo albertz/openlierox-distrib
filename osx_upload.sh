@@ -5,7 +5,7 @@ distribdir="$(pwd)"
 
 source functions.sh
 
-dmgfile="$(get_olx_targetname).dmg"
+dmgfile="$(get_olx_osx_fn)"
 
 if [ ! -e "$dmgfile" ]; then
 	echo "DMG file $dmgfile not found."
