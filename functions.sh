@@ -52,11 +52,16 @@ function get_olx_targetname() {
 }
 
 function upload_to_frs() {
+	[ ! -e "$1" ] && {
+		echo "upload_to_frs: $1 not found"
+		return 1
+	}
+
 	[ "$sfuser" = "" ] && [ "$(whoami)" == "az" ] && sfuser="albertzeyer,openlierox"
 	[ "$group" = "" ] && group="openlierox"
 	[ "$release" = "" ] && release="OpenLieroX $(get_olx_human_version)"
 
-	echo "* uploading $1 to $group / $release ..."
+	echo "* uploading $(basename $1) to $group / $release ..."
 	rsync -avP "$1" \
 	$sfuser@shell.sourceforge.net:"\"/home/frs/project/o/op/openlierox/$group/$release/\""
 }

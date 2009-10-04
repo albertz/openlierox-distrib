@@ -5,11 +5,6 @@ distribdir="$(pwd)"
 
 source functions.sh
 
-dmgfile="$(get_olx_targetname).dmg"
-
-if [ ! -e "$dmgfile" ]; then
-	echo "DMG file $dmgfile not found."
-	exit 1
-fi
-
-upload_to_frs "$dmgfile"
+upload_to_frs "$(get_olx_win32_fn)"
+upload_to_frs "$(get_olx_win32patch_fn)"
+upload_to_frs "$(get_olx_win32debug_fn)"
