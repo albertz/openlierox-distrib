@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 cd "$(dirname "$0")"
 distribdir="$(pwd)"
@@ -19,7 +19,7 @@ VERSION="$(get_olx_version)"
 echo ">>> preparing $VERSION src archive ..."
 
 
-src_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* bin/OpenLieroX.exe ${distribdir}/win32/*)
+src_files=(build CMakeLists.txt ${olxdir}/*.sh start.bat COPYING.LIB DEPS VERSION doc include optional-includes src libs share)
 
 
 # $1 - zip filename
@@ -27,18 +27,18 @@ src_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* bin/OpenLieroX.exe ${distri
 function create_archiv() {
 	files=($*)
 	files=($files[2,-1])
-	zipfile=$1
+	tarfile=$1
 
-	rm -f $zipfile 2>/dev/null
-	echo ">>> creating $(basename $zipfile) ..."
+	rm -f $tarfile 2>/dev/null
+	echo ">>> creating $(basename $tarfile) ..."
 
 	cd ${distribdir} || {
 		echo "create_archiv: cd to distrib failed"
 		return 1
 	}
 
-	[ -d win32tmp ] && rm -rf win32tmp
-	mkdir -p win32tmp/OpenLieroX || {
+	[ -d tmparchiv ] && rm -rf tmparchiv
+	mkdir -p tmparchiv/OpenLieroX || {
 		echo "create_archiv: cannot create tmp directory"
 		return 1
 	}
@@ -46,29 +46,31 @@ function create_archiv() {
 	for f in $files; do
 		[ "$f[1]" != "/" ] && f="${olxdir}/$f"
 		[ ! -e $f ] && {
-			echo "create_archiv $(basename $zipfile): cannot find $f"
+			echo "create_archiv $(basename $tarfile): cannot find $f"
 			return 1
 		}
 		{ tar -c \
-			--exclude=.svn --exclude=.git --exclude=.pyc --exclude=~ \
+			--exclude-vcs --exclude=.svn --exclude=.git \
+			--exclude=.pyc --exclude=~ \
+			$( [ -e ${olxdir}/.gitignore ] && echo "--exclude-from=\"${olxdir}/.gitignore\"" ) \
 			-C "$(dirname $f)" "$(basename $f)" \
-		| tar -x -C win32tmp/OpenLieroX; } || {
-			echo "create_archiv $(basename $zipfile): Couldn't copy $f"
+		| tar -x -C tmparchiv/OpenLieroX; } || {
+			echo "create_archiv $(basename $tarfile): Couldn't copy $f"
 			return 1
 		}
 		echo -n "+"
 	done
 	echo -n " "
 
-	cd win32tmp
-	zip -r -9 $zipfile OpenLieroX | { while read t; do echo -n "."; done; } || {
-		echo "create_archiv $(basename $zipfile): error while zipping"
+	cd tmparchiv
+	tar -cjf $tarfile OpenLieroX || {
+		echo "create_archiv $(basename $tarfile): error while zipping"
 		return 1
 	}
 	cd ..
 
 	echo -n " -"
-	rm -rf win32tmp
+	rm -rf tmparchiv
 	echo " *"
 
 }
