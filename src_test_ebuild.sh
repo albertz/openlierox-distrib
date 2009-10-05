@@ -12,3 +12,6 @@ if [ ! -e $eb ]; then
 	echo "Ebuild $(basename $eb) not found."
 	exit 1
 fi
+
+export DISTDIR="$distribdir"
+sudo -E ebuild --skip-manifest $eb merge
