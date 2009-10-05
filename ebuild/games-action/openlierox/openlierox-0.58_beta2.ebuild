@@ -4,7 +4,7 @@
 
 EAPI=2
 
-inherit eutils games toolchain-funcs
+inherit eutils games toolchain-funcs cmake-utils
 
 DESCRIPTION="A real-time excessive Worms-clone"
 HOMEPAGE="http://openlierox.sourceforge.net/"
@@ -24,22 +24,23 @@ RDEPEND="media-libs/libsdl
 	X? ( x11-libs/libX11
 		media-libs/libsdl[X] )"
 
-DEPEND="${RDEPEND}
-	dev-util/cmake"
+DEPEND="${RDEPEND}"
 
 MY_PN="OpenLieroX"
 MY_P="${MY_PN}_${PV}"
 S="${WORKDIR}/${MY_PN}"
 
-src_compile() {
+src_configure() {
 	# SYSTEM_DATA_DIR/OpenLieroX will be the search path
 	# the compile.sh will also take care of CXXFLAGS
-	cmake -D SYSTEM_DATA_DIR="${GAMES_DATADIR}" \
-	-D DEBUG=$(use debug && echo 1 || echo 0) \
-	-D X11=$(use X && echo 1 || echo 0) \
-	-D VERSION=${PV} . \
-	|| die "CMake failed"
-	make || die "compilation failed"
+
+	local mycmakeargs="
+		$(cmake-utils_use debug DEBUG)
+		$(cmake-utils_use X X11)
+		-D SYSTEM_DATA_DIR=${GAMES_DATADIR}
+		-D VERSION=${PV}"
+
+	cmake-utils_src_configure || die "CMake configure failed"
 }
 
 src_install() {
