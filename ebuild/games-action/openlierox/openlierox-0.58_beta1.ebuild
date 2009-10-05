@@ -18,7 +18,6 @@ IUSE="X debug"
 RDEPEND="media-libs/libsdl
 	media-libs/sdl-mixer
 	media-libs/sdl-image
-	dev-games/hawknl
 	media-libs/gd
 	dev-libs/libxml2
 	dev-libs/libzip
