@@ -40,12 +40,12 @@ src_configure() {
 		-D SYSTEM_DATA_DIR=${GAMES_DATADIR}
 		-D VERSION=${PV}"
 
-	cmake-utils_src_configure || die "CMake configure failed"
+	cmake-utils_src_configure
 }
 
 src_install() {
 	einfo "copying binary ..."
-	dogamesbin bin/openlierox || die "cannot copy binary"
+	dogamesbin ${CMAKE_BUILD_DIR}/bin/openlierox || die "cannot copy binary"
 
 	einfo "copying gamedata-files ..."
 	# HINT: the app uses case-insensitive file-handling
