@@ -76,7 +76,7 @@ function upload_to_frs() {
 	ssh $sfuser@shell.sourceforge.net create
 
 	echo "* uploading $(basename $1) to $group / $release ..."
-	rsync -avP "$1" \
+	rsync -vP "$1" \
 	$sfuser@shell.sourceforge.net:"\"/home/frs/project/o/op/openlierox/$group/$release/\""
 }
 
