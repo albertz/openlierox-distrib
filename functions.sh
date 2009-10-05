@@ -55,6 +55,9 @@ function guess_sfuser() {
 	[ "$sfuser" != "" ] && echo "$sfuser" && return 0
 	[ "$(whoami)" == "az" ] && echo "albertzeyer,openlierox" && return 0
 	[ "$(hostname | grep "albert")" != "" ] && echo "albertzeyer,openlierox" && return 0
+
+	[ "$(whoami)" == "pelya" ] && echo "pelya,openlierox" && return 0
+
 	# add more checks for yourself here
 	echo "WASNOTABLETODETYOURSFUSERNAME"
 }
@@ -98,6 +101,17 @@ function get_olx_src_fn() {
 	echo "$(get_olx_basefn).src.tar.bz2"
 }
 
+function get_olx_deb_i386_fn() {
+	echo "openlierox_`echo $(get_olx_version)|sed 's/_/./g'`_i386.deb"
+}
+
+function get_olx_deb_amd64_fn() {
+	echo "openlierox_`echo $(get_olx_version)|sed 's/_/./g'`_amd64.deb"
+}
+
+function get_olx_deb_ia64_fn() {
+	echo "openlierox_`echo $(get_olx_version)|sed 's/_/./g'`_ia64.deb"
+}
 
 
 # ------- some system functions ----
