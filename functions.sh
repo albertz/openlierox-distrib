@@ -97,3 +97,12 @@ function get_olx_win32debug_fn() {
 function get_olx_src_fn() {
 	echo "$(get_olx_basefn).src.tar.bz2"
 }
+
+
+
+# ------- some system functions ----
+
+function is_gentoo() {
+	type ebuild 2>/dev/null >/dev/null && return 0
+	return 1
+}

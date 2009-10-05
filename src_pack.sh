@@ -52,7 +52,7 @@ function create_archiv() {
 		{ tar -c \
 			--exclude-vcs --exclude=.svn --exclude=.git \
 			--exclude=.pyc --exclude=~ \
-			$( [ -e ${olxdir}/.gitignore ] && echo "--exclude-from=\"${olxdir}/.gitignore\"" ) \
+			$( [ -e ${olxdir}/.gitignore ] && echo "--exclude-from=${olxdir}/.gitignore" ) \
 			-C "$(dirname $f)" "$(basename $f)" \
 		| tar -x -C tmparchiv/OpenLieroX; } || {
 			echo "create_archiv $(basename $tarfile): Couldn't copy $f"
@@ -77,3 +77,24 @@ function create_archiv() {
 
 
 create_archiv "${distribdir}/$(get_olx_src_fn)" $src_files
+
+if is_gentoo; then
+	${distribdir}/src_test_ebuild.sh || {
+		echo "Ebuild build test failed."
+		exit 1
+	}
+fi
+
+# Note: it could be that this release doesnt has a compile.sh anymore
+if [ -x ${olxdir}/compile.sh ]; then
+	${distribdir}/src_test_compile.sh || {
+		echo "Compile test failed."
+		exit 1
+	}
+fi
+
+${distribdir}/src_test_cmake.sh || {
+	echo "Compile test (based on Cmake) failed."
+	exit 1
+}
+
