@@ -19,8 +19,12 @@ VERSION="$(get_olx_version)"
 echo ">>> preparing $VERSION src archive ..."
 
 
-src_files=(build CMakeLists.txt PCHSupport_26.cmake ${olxdir}/*.sh start.bat COPYING.LIB DEPS VERSION doc include optional-includes src libs share)
+src_files=(build CMakeLists.txt ${olxdir}/*.sh start.bat COPYING.LIB DEPS VERSION doc include src libs share)
 
+# not all releases have that file
+for f in PCHSupport_26.cmake optional_includes; do
+	[ -e ${olxdir}/$f ] && src_files += $f
+done
 
 # $1 - zip filename
 # $[1:] - array of files
