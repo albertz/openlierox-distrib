@@ -25,7 +25,8 @@ RDEPEND="media-libs/libsdl
 	X? ( x11-libs/libX11
 		media-libs/libsdl[X] )"
 
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	dev-util/cmake"
 
 MY_PN="OpenLieroX"
 MY_P="${MY_PN}_${PV}"
@@ -34,12 +35,12 @@ S="${WORKDIR}/${MY_PN}"
 src_compile() {
 	# SYSTEM_DATA_DIR/OpenLieroX will be the search path
 	# the compile.sh will also take care of CXXFLAGS
-	SYSTEM_DATA_DIR="${GAMES_DATADIR}" \
-	COMPILER=$(tc-getCXX) \
-	DEBUG=$(use debug && echo 1 || echo 0) \
-	X11=$(use X && echo 1 || echo 0) \
-	VERSION=${PV} \
-	./compile.sh || die "compilation failed"
+	cmake -D SYSTEM_DATA_DIR="${GAMES_DATADIR}" \
+	-D DEBUG=$(use debug && echo 1 || echo 0) \
+	-D X11=$(use X && echo 1 || echo 0) \
+	-D VERSION=${PV} . \
+	|| die "CMake failed"
+	make || die "compilation failed"
 }
 
 src_install() {
