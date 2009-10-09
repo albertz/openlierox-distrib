@@ -21,6 +21,7 @@ RDEPEND="media-libs/libsdl
 	media-libs/gd
 	dev-libs/libxml2
 	dev-libs/libzip
+	net-misc/curl
 	X? ( x11-libs/libX11
 		media-libs/libsdl[X] )"
 
