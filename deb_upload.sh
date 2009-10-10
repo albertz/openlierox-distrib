@@ -15,8 +15,8 @@ fi
 uploaded=false
 
 for ARCH in i386 ia64 amd64; do
-	if [ -e "$olxdir/../$(get_olx_deb_${ARCH}_fn)" ]; then 
-		upload_to_frs "$olxdir/../$(get_olx_deb_${ARCH}_fn)"
+	if [ -e "/var/cache/pbuilder/result/$(get_olx_deb_${ARCH}_fn)" ]; then 
+		upload_to_frs "/var/cache/pbuilder/result/$(get_olx_deb_${ARCH}_fn)"
 		uploaded=true
 	fi
 done
