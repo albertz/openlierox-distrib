@@ -14,7 +14,7 @@ fi
 
 cd "${olxdir}"
 
-dpkg-buildpackage -rfakeroot -sa \
+dpkg-buildpackage -rfakeroot -sa -S \
 	-I.svn -I.git -Idistrib -ICMakeFiles -Ibuild -I*stamp -IMakefile \
 	-ICMakeCache.txt -Icmake* -Itools -Isandbox \
 	-i\
@@ -26,3 +26,7 @@ dpkg-buildpackage -rfakeroot -sa \
 "(?:^|/)(?:CVS|RCS|\.deps|\{arch\}|\.arch-ids|\.svn|_darcs|\.git|\.bzr(?:\.backup|tags)?)(?:$|/.*$)$|"\
 "(?:^|/)(?:CMakeFiles|build|distrib|tools|Makefile|CMakeCache.txt|cmake)|"\
 "(?:^|/)bin/.*$"
+
+sudo pbuilder build "${olxdir}/../$(get_olx_deb_base_fn).dsc"
+
+# result is: /var/cache/pbuilder/result/openlierox_$ver_$arch.deb

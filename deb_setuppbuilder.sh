@@ -6,4 +6,7 @@
 }
 
 apt-get install pbuilder
-pbuilder create --distribution etch --override-config --othermirror "deb http://http.us.debian.org/debian etch main"  --mirror "http://http.us.debian.org/debian"
+
+dist=lenny
+
+pbuilder create --distribution $dist --override-config --othermirror "deb http://http.us.debian.org/debian $dist main"  --mirror "http://http.us.debian.org/debian"

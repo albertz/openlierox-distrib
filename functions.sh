@@ -104,16 +104,20 @@ function get_olx_src_fn() {
 	echo "$(get_olx_basefn).src.tar.bz2"
 }
 
+function get_olx_deb_base_fn() {
+	echo "openlierox_$(echo $(get_olx_version)|sed 's/_/./g')"
+}
+
 function get_olx_deb_i386_fn() {
-	echo "openlierox_`echo $(get_olx_version)|sed 's/_/./g'`_i386.deb"
+	echo "$(get_olx_deb_base_fn)_i386.deb"
 }
 
 function get_olx_deb_amd64_fn() {
-	echo "openlierox_`echo $(get_olx_version)|sed 's/_/./g'`_amd64.deb"
+	echo "$(get_olx_deb_base_fn)_amd64.deb"
 }
 
 function get_olx_deb_ia64_fn() {
-	echo "openlierox_`echo $(get_olx_version)|sed 's/_/./g'`_ia64.deb"
+	echo "$(get_olx_deb_base_fn)_ia64.deb"
 }
 
 
