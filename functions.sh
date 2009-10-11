@@ -104,8 +104,14 @@ function get_olx_src_fn() {
 	echo "$(get_olx_basefn).src.tar.bz2"
 }
 
+function get_deb_olx_ver() {
+	local ver="$(get_olx_version)"
+	[ "$1" != "" ] && ver="$1"
+	echo "${ver}" | sed "s/_/./g"
+}
+
 function get_olx_deb_base_fn() {
-	echo "openlierox_$(echo $(get_olx_version)|sed 's/_/./g')"
+	echo "openlierox_$(get_deb_olx_ver)"
 }
 
 function get_olx_deb_i386_fn() {
