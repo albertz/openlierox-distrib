@@ -5,7 +5,12 @@
 	exit $?
 }
 
-apt-get install pbuilder
+[ ! -x /usr/sbin/pbuilder ] && {
+	apt-get install pbuilder || {
+		echo "Cannot install pbuilder."
+		exit 1
+	}
+}
 
 dist=etch
 
