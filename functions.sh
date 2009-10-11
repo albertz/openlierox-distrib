@@ -39,6 +39,8 @@ function test_olx_bin() {
 }
 
 function get_olx_version() {
+	[ "$olxver" != "" ] && { echo "$olxver"; return; }
+	local olxdir
 	[ "$olxdir" = "" ] && olxdir="$(guess_olx_dir)"
 	cat "$olxdir/VERSION"
 }
