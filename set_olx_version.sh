@@ -28,8 +28,10 @@ echo "* Setting new version to: $newversion"
 echo "$newversion" > VERSION
 
 # source Version.cpp
-sed -i -r -e "s/LX_VERSION.*\".*\"/LX_VERSION\t\"$newversion\"/1" src/common/Version.cpp
+tab="$(printf "\\t")"
+sed -i "" -e "s/LX_VERSION.*\".*\"/LX_VERSION${tab}\"$newversion\"/1" src/common/Version.cpp
 
 # Debian
-sed -i -e "s/openlierox (.*)/openlierox ($(get_deb_olx_ver "$newversion"))/1" \
--e "s/-- Albert Zeyer .*/-- Albert Zeyer <albert.zeyer@rwth-aachen.de>  $(date -R)/1" debian/changelog
+rfc2822date="$(date "+%a, %d %b %Y %k:%M:%S %z")" # date -R only works for GNU date
+sed -i "" -e "s/openlierox (.*)/openlierox ($(get_deb_olx_ver "$newversion"))/1" debian/changelog
+sed -i "" -e "s/-- Albert Zeyer .*/-- Albert Zeyer <albert.zeyer@rwth-aachen.de>  ${rfc2822date}/1" debian/changelog
