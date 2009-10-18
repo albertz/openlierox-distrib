@@ -7,9 +7,16 @@ function is_olx_dir() {
 	test -d "$1/build/Xcode/OpenLieroX.xcodeproj" && return 0 || return 1
 }
 
+function abs_filename() {
+	local oldpwd="$(pwd)"
+	cd "$1" 2>/dev/null || return 1
+	pwd
+	cd "${oldpwd}"
+}
+
 function guess_olx_dir() {
 	# We could check several dirs here now. This is just how I have it.
-	echo "${curdir}/../openlierox"
+	echo "${curdir}/../openlierox" | abs_filename
 }
 
 # $1 - macosx .app bundle
