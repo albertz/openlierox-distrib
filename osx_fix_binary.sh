@@ -60,9 +60,3 @@ fi
 			done
 		done
 
-# simple crash reporter
-if [ -x "${olxdir}/src/breakpad/external/src/tools/mac/crash_report/build/Release/crash_report" ]; then
-	echo ">>> placing simple crash reporter"
-	cp "${olxdir}/src/breakpad/external/src/tools/mac/crash_report/build/Release/crash_report" OpenLieroX.app/Contents/Resources/ || exit 1
-	cp "${olxdir}/tools/CrashReporter/SimpleCrashReporter.py" OpenLieroX.app/Contents/Resources/CrashReporter || exit 1
-fi
