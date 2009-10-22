@@ -105,10 +105,6 @@ function get_olx_win32patch_fn() {
 	echo "$(get_olx_basefn).win32.patch.zip"
 }
 
-function get_olx_win32debug_fn() {
-	echo "$(get_olx_basefn).win32.debug.zip"
-}
-
 function get_olx_src_fn() {
 	echo "$(get_olx_basefn).src.tar.bz2"
 }
