@@ -16,7 +16,7 @@ function abs_filename() {
 
 function guess_olx_dir() {
 	# We could check several dirs here now. This is just how I have it.
-	echo "${curdir}/../openlierox" | abs_filename
+	abs_filename "$(echo "${curdir}/../openlierox")"
 }
 
 # $1 - macosx .app bundle
