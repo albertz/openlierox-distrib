@@ -19,9 +19,8 @@ VERSION="$(get_olx_version)"
 echo ">>> preparing $VERSION archives ..."
 
 
-win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* bin/OpenLieroX.exe ${distribdir}/win32/*)
-win32patch_files=(bin/OpenLieroX.exe share/gamedir/cfg share/gamedir/data ${distribdir}/win32/*)
-win32debug_files=(bin/OpenLieroX.{exe,pdb,map} bin/vc80.{pdb,idb} ${olxdir}/src ${olxdir}/include)
+win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* bin/OpenLieroX.{exe,pdb,map} bin/vc80.{pdb,idb} ${distribdir}/win32/*)
+win32patch_files=(bin/OpenLieroX.{exe,pdb,map} bin/vc80.{pdb,idb} share/gamedir/cfg share/gamedir/data ${distribdir}/win32/*)
 
 
 # $1 - zip filename
@@ -76,6 +75,7 @@ function create_archiv() {
 }
 
 
-create_archiv "${distribdir}/$(get_olx_win32debug_fn)" $win32debug_files && \
+#create_archiv "${distribdir}/$(get_olx_win32debug_fn)" $win32debug_files && \
+
 create_archiv "${distribdir}/$(get_olx_win32patch_fn)" $win32patch_files && \
 create_archiv "${distribdir}/$(get_olx_win32_fn)" $win32_files
