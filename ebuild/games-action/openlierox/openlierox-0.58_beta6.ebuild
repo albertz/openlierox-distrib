@@ -13,7 +13,7 @@ SRC_URI="mirror://sourceforge/openlierox/OpenLieroX_${PV}.src.tar.bz2"
 LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="~ppc ~x86 ~amd64"
-IUSE="X debug"
+IUSE="X debug nobreakpad"
 
 RDEPEND="media-libs/libsdl
 	media-libs/sdl-mixer
@@ -38,6 +38,7 @@ src_configure() {
 	local mycmakeargs="
 		$(cmake-utils_use debug DEBUG)
 		$(cmake-utils_use X X11)
+		-D BREAKPAD=$(use nobreakpad && echo "No" || echo "Yes")
 		-D SYSTEM_DATA_DIR=${GAMES_DATADIR}
 		-D VERSION=${PV}"
 
