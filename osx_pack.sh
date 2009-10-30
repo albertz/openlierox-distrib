@@ -95,8 +95,8 @@ mkdir -p dmg || {
 olxtargetname="$(get_olx_targetname)"
 
 echo "** preparing release DMG"
-mkdir -p "dmg/${olxtargetname}.app"
-rsync -a --delete "$olxbin/"* "dmg/${olxtargetname}.app" || {
+mkdir -p "dmg/OpenLieroX.app"
+rsync -a --delete "$olxbin/"* "dmg/OpenLieroX.app" || {
 	echo "osx_pack: error while copying binary"
 	exit 1
 }
