@@ -6,7 +6,7 @@
   <assemblyIdentity
     type="win32"
     name="Microsoft.VC80.CRT"
-    version="8.0.50727.762"
+    version="8.0.50727.4053"
     processorArchitecture="x86"
     publicKeyToken="1fc8b3b9a1e18e3b" />
   <file name="msvcr80.dll"/>
