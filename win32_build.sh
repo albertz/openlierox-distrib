@@ -17,7 +17,13 @@ fi
 
 #cd "${olxdir}/build/msvc 2005"
 
-vcbuildpath="/cygdrive/c/Program Files/Microsoft Visual Studio 8/VC/vcpackages"
+export WINEPREFIX=/mnt/data3b/msvc2k5wine
+windowsbase=$WINEPREFIX/drive_c
+
+vcbuildpath="$windowsbase/Program Files/Microsoft Visual Studio 8/VC/vcpackages"
+#vcbuildpath="/cygdrive/c/Program Files/Microsoft Visual Studio 8/VC/vcpackages"
+
+
 #vcbuild="$vcbuildpath/vcbuild.exe"
 
 #cp "$vcbuildpath/1031/"* "$vcbuildpath/"
@@ -31,11 +37,16 @@ olxdir="$(pwd)"
 
 # start the build itself
 cd "$vcbuildpath"
-"${distribdir}/win32_runbuild.bat" "$(cygpath -a -w "$olxdir")/build/msvc 2005/Game.vcproj"
+#"${distribdir}/win32_runbuild.bat" "$(cygpath -a -w "$olxdir")/build/msvc 2005/Game.vcproj"
+
+
+wineconsole "${distribdir}/win32_runbuild.bat" "$(winepath -w "$olxdir")/build/msvc 2005/Game.vcproj"
+
+
 
 # if the task is still running, kill it
-sleep 1
-taskkill /F /IM cl.exe 2>/dev/null
+#sleep 1
+#taskkill /F /IM cl.exe 2>/dev/null
 
 echo "** ready"
 
