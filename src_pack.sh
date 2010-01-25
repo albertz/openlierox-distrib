@@ -55,6 +55,7 @@ function create_archiv() {
 		}
 		{ tar -c \
 			--exclude-vcs --exclude=.svn --exclude=.git \
+			--exclude=.o --exclude=.a \
 			--exclude=.pyc --exclude=~ \
 			$( [ -e ${olxdir}/.gitignore ] && echo "--exclude-from=${olxdir}/.gitignore" ) \
 			-C "$(dirname $f)" "$(basename $f)" \
