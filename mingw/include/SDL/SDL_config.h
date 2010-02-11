@@ -95,7 +95,7 @@
 #define HAVE_MEMSET 1
 #define HAVE_MEMCPY 1
 #define HAVE_MEMMOVE 1
-/* #undef HAVE_MEMCMP */
+#define HAVE_MEMCMP 1
 #define HAVE_STRLEN 1
 /* #undef HAVE_STRLCPY */
 /* #undef HAVE_STRLCAT */
@@ -118,7 +118,7 @@
 #define HAVE__UI64TOA 1
 #define HAVE_STRTOLL 1
 #define HAVE_STRTOULL 1
-/* #undef HAVE_STRTOD */
+#define HAVE_STRTOD 1
 #define HAVE_ATOI 1
 #define HAVE_ATOF 1
 #define HAVE_STRCMP 1
@@ -305,7 +305,7 @@
 
 /* Enable assembly routines */
 #define SDL_ASSEMBLY_ROUTINES 1
-#define SDL_HERMES_BLITTERS 1
+/* #undef SDL_HERMES_BLITTERS */
 /* #undef SDL_ALTIVEC_BLITTERS */
 
 #endif /* _SDL_config_h */
