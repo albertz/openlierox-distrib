@@ -19,8 +19,8 @@ VERSION="$(get_olx_version)"
 echo ">>> preparing $VERSION archives ..."
 
 
-win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* bin/OpenLieroX.{exe,pdb,map} bin/vc80.{pdb,idb} ${distribdir}/win32/*)
-win32patch_files=(bin/OpenLieroX.{exe,pdb,map} bin/vc80.{pdb,idb} share/gamedir/cfg share/gamedir/data ${distribdir}/win32/*)
+win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* bin/OpenLieroX.{exe,pdb,map} ${distribdir}/win32/*)
+win32patch_files=(bin/OpenLieroX.{exe,pdb,map} share/gamedir/cfg share/gamedir/data ${distribdir}/win32/*)
 
 
 # $1 - zip filename
