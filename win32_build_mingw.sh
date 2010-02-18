@@ -14,6 +14,7 @@ cd win32build
 mingwdir="${distribdir}/mingw"
 
 cprefix="/usr/bin/i586-mingw32"
+which ${cprefix}-gcc || cprefix="/usr/bin/i586-mingw32msvc" # Different name on different Debian variants
 export CC="${cprefix}-gcc"
 export CXX="${cprefix}-c++"
 
