@@ -1,11 +1,8 @@
-Liero Xtreme Level Maker v1.1
+Liero Xtreme Level Maker v1.2
 By Auxiliary Software 2002
+By OpenLieroX dev team 2009
 
-http://lieroxtreme.xp8.com/
-
-29th July 2003
--------------------------------------
-
+http://openlierox.net/
 
 Contents
 1) Description
@@ -36,6 +33,12 @@ Empty = 0, 0, 0
 
 All three images must be exactly the same image size.
 
+d) Hi-res front and back images (optional)
+The same as front and back images, but with possibility to add more detail - 
+the level won't look pixelated if you include these images. They will be shown instead of low-res images,
+but material image is the same for both hi-res and low-res versions.
+Hi-res images are supported since OpenLieroX 0.58, old LX will just show low-res images 2x scaled up.
+Hi-res images should be exactly twice the size of other three images.
 
 
 2) How to use it
@@ -47,7 +50,7 @@ All three images must be exactly the same image size.
 
 The level file should have the extension *.lxl so that Liero Xtreme can see that it is a possible level.
 
-The 3 images can be in any of the following image formats:
+The images can be in any of the following image formats:
 PNG, JPEG, PCX, BMP, TGA, GIF
 
 However, storing material files in lossy file formats (jpeg, gif) may result in slight value changes in the colour which would cause the material file to be not processed correctly.
@@ -59,6 +62,4 @@ Load up Liero Xtreme, select your level from the list, and play!
 
 
 3) Contact
-Contact me at:
-jasonb___@hotmail.com
-(Use 'LieroX' as the subject name to help me out)
+Send mail to openlierox-devel@lists.sourceforge.net
