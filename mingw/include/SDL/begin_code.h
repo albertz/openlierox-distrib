@@ -125,7 +125,7 @@
  *  packing set to an alternate value, say for loading structures from disk.
  *  The packing is reset to the previous value in close_code.h 
  */
-#if defined(_MSC_VER) || defined(__MWERKS__) || defined(__BORLANDC__)
+#if defined(_MSC_VER) || defined(__MWERKS__) || defined(__BORLANDC__) || defined(__MINGW32_VERSION)
 #ifdef _MSC_VER
 #pragma warning(disable: 4103)
 #endif
