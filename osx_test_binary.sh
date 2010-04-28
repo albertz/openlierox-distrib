@@ -31,9 +31,14 @@ ret=0
 # is correct (fixed by osx_fix_binary.sh) and that OLX runs on a clean system.
 frameworks=("$bin/Contents/Frameworks/"*.framework)
 frameworks=(${frameworks:t})
+frs=()
 for fr in $frameworks; do
-	mv "/Library/Frameworks/$fr" "${libtmpdir}/" || ret=1
+	if [ -d "/Library/Frameworks/$fr" ]; then
+		mv "/Library/Frameworks/$fr" "${libtmpdir}/" || ret=1
+		frs=(${frs} $fr)
+	fi
 done
+frameworks=($frs)
 
 test_olx_bin "${bin}/Contents/MacOS/OpenLieroX" || {
 	echo "Error while running OpenLieroX."
