@@ -6,6 +6,21 @@ REMOTEDIR="/home/groups/o/op/openlierox/htdocs/"
 DEST="$SERVER:$REMOTEDIR"
 SYNC_CMD="rsync -avP --exclude .svn"
 
+if [ "$1" == "dest" ]; then
+	echo "$DEST"
+	exit 0
+elif [ "$1" == "cmd" ]; then
+	echo "$SYNC_CMD"
+	exit 0
+elif [ "$1" == "sync" ]; then
+	{} # just continue
+else
+	echo "usage: $0 sync|dest|cmd"
+	exit 1
+fi
+
+
+
 [ -e tmpbuild/* ] 2>/dev/null && {
 	f=$(echo tmpbuild/*)
 	ssh $SERVER "cd $REMOTEDIR; [ -e tmpbuild/* ] 2>/dev/null && \
