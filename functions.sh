@@ -29,14 +29,8 @@ function is_olx_macosx_bin() {
 }
 
 # returns olx macosx .app bundle
-# optional $1 - olxdir
 function get_olx_macosx_bin() {
-	if [ "$1" != "" ]; then
-		olxdir="$1"
-	else
-		olxdir="$(guess_olx_dir)"	
-	fi
-	echo "${olxdir}/build/Xcode/build/Release/OpenLieroX.app"
+	echo "{curdir}/build-osx/OpenLieroX.app"
 }
 
 # $1 - binary
