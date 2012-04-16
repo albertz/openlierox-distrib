@@ -55,6 +55,7 @@ mkdmg() {
 	# create temporary disk image and format, ejecting when done
 	SIZE=$(du -sk ${FILES} | cut -f 1)
 	SIZE=$((${SIZE}/1000+5))
+	echo "mkdmg: estimated size: $SIZE mb"
 	hdiutil create "$DMGTMP" -megabytes ${SIZE} -ov -type UDIF -fs HFS+ -volname "$VOL" || {
 		echo "mkdmg: could not create temp dmg"
 		exit 1
@@ -82,6 +83,7 @@ mkdmg() {
 	rm -f "$DMGTMP"
 }
 
+rm -rf dmg # cleanup old if there...
 mkdir -p dmg || {
 	echo "Cannot create temporary dmg directory."
 	exit 1
@@ -90,8 +92,7 @@ mkdir -p dmg || {
 olxtargetname="$(get_olx_targetname)"
 
 echo "** preparing release DMG"
-mkdir -p "dmg/OpenLieroX.app"
-rsync -a --delete "$olxbin/"* "dmg/OpenLieroX.app" || {
+mv "$olxbin" dmg/ || {
 	echo "osx_pack: error while copying binary"
 	exit 1
 }

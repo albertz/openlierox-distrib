@@ -30,11 +30,12 @@ cmake \
 	-DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CFLAGS" \
 	-DCMAKE_C_FLAGS_RELEASE="" -DCMAKE_CXX_FLAGS_RELEASE="" \
 	-DDEBUG=Off .
-make -j4
+make -j4 || exit 1
 
-mkdir -p OpenLieroX.app/Contents/MacOS
-mkdir -p OpenLieroX.app/Contents/Frameworks
-echo -n "APPL????" >OpenLieroX.app/Contents/PkgInfo
+rm -r OpenLieroX.app
+mkdir -p OpenLieroX.app/Contents/MacOS || exit 1
+mkdir -p OpenLieroX.app/Contents/Frameworks || exit 1
+echo -n "APPL????" >OpenLieroX.app/Contents/PkgInfo || exit 1
 
 cat >OpenLieroX.app/Contents/Info.plist <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -65,9 +66,10 @@ cat >OpenLieroX.app/Contents/Info.plist <<EOF
 </plist>
 EOF
 
-cp bin/openlierox OpenLieroX.app/Contents/MacOS/
-cp -a $olxdir/share OpenLieroX.app/Contents/Resources
-cp -a /Library/Frameworks/SDL.framework OpenLieroX.app/Contents/Frameworks/
+cp bin/openlierox OpenLieroX.app/Contents/MacOS/ || exit 1
+cp -a $olxdir/share OpenLieroX.app/Contents/Resources || exit 1
+cp -a /Library/Frameworks/SDL.framework OpenLieroX.app/Contents/Frameworks/ || exit 1
+cp -a /Library/Frameworks/SDL_image.framework OpenLieroX.app/Contents/Frameworks/ || exit 1
 
 {
 cd OpenLieroX.app/Contents/MacOS
@@ -89,4 +91,6 @@ otool -L "$bin" | grep -E "\t+" | sed -E "s/^[[:space:]]+([^ ]+).*/\1/g" | { whi
 
 liblocalcopy openlierox
 }
+
+exit 0
 
