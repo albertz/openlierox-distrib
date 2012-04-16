@@ -33,6 +33,7 @@ cmake \
 make -j4
 
 mkdir -p OpenLieroX.app/Contents/MacOS
+mkdir -p OpenLieroX.app/Contents/Frameworks
 echo -n "APPL????" >OpenLieroX.app/Contents/PkgInfo
 
 cat >OpenLieroX.app/Contents/Info.plist <<EOF
@@ -66,3 +67,26 @@ EOF
 
 cp bin/openlierox OpenLieroX.app/Contents/MacOS/
 cp -a $olxdir/share OpenLieroX.app/Contents/Resources
+cp -a /Library/Frameworks/SDL.framework OpenLieroX.app/Contents/Frameworks/
+
+{
+cd OpenLieroX.app/Contents/MacOS
+
+function liblocalcopy() {
+bin="$1"
+otool -L "$bin" | grep -E "\t+" | sed -E "s/^[[:space:]]+([^ ]+).*/\1/g" | { while read lib; do {
+	echo $lib | grep $bin >/dev/null && continue
+	locallib="$(basename $lib)"
+	echo $lib | grep -E "^/usr/local/" >/dev/null && {
+	libnewname="@executable_path/$locallib"
+	install_name_tool -change "$lib" "$libnewname" "$bin"
+	cp "$lib" .
+	chmod u+w $locallib
+	liblocalcopy $locallib
+	}
+}; done; }
+}
+
+liblocalcopy openlierox
+}
+
