@@ -1,6 +1,7 @@
 *.dmg
 *.zip
 *.tar.bz2
+build-*
 
 *~
 
