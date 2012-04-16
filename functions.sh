@@ -30,7 +30,7 @@ function is_olx_macosx_bin() {
 
 # returns olx macosx .app bundle
 function get_olx_macosx_bin() {
-	echo "{curdir}/build-osx/OpenLieroX.app"
+	echo "${curdir}/build-osx/OpenLieroX.app"
 }
 
 # $1 - binary
