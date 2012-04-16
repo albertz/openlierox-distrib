@@ -17,12 +17,7 @@ fi
 	exit 1	
 }
 
-olxbin="$(get_olx_macosx_bin "$olxdir")"
-
-"${distribdir}"/osx_fix_binary.sh "$olxbin" || {
-	echo "Error while fixing binary."
-	exit 1
-}
+olxbin="$(get_olx_macosx_bin)"
 
 "${distribdir}"/osx_test_binary.sh "$olxbin" || {
 	echo "Error while testing binary."
