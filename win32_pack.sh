@@ -19,8 +19,8 @@ VERSION="$(get_olx_version)"
 echo ">>> preparing $VERSION archives ..."
 
 
-win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* bin/*.{exe,pdb,map} ${distribdir}/win32/*)
-win32patch_files=(bin/*.{exe,pdb,map} share/gamedir/cfg share/gamedir/data ${distribdir}/win32/*)
+win32_files=(doc COPYING.LIB ${olxdir}/share/gamedir/* ${distribdir}/build-win32/* ${distribdir}/win32/*)
+win32patch_files=(${distribdir}/build-win32/* share/gamedir/cfg share/gamedir/data ${distribdir}/win32/*)
 
 
 # $1 - zip filename
@@ -77,5 +77,5 @@ function create_archiv() {
 
 #create_archiv "${distribdir}/$(get_olx_win32debug_fn)" $win32debug_files && \
 
-create_archiv "${distribdir}/$(get_olx_win32patch_fn)" $win32patch_files && \
-create_archiv "${distribdir}/$(get_olx_win32_fn)" $win32_files
+#create_archiv "${distribdir}/$(get_olx_win32patch_fn)" $win32patch_files || exit 1
+create_archiv "${distribdir}/$(get_olx_win32_fn)" $win32_files || exit 1
