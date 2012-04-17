@@ -20,5 +20,5 @@ echo "\$newestBetaVersion_cpu = \"OpenLieroX/${VERSION}\";" >> "${file}"
 echo "\$newestBetaReleaseDate = \"${DATE}\";" >> "${file}"
 echo "?>" >> "${file}"
 
-ftp -u "ftp://${ftplogin}/" $file
+ftp -u "ftp://${ftplogin}/official/" $file
 rm $file
