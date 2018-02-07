@@ -15,6 +15,7 @@ mingwdir="${distribdir}/mingw"
 
 cprefix="/usr/bin/i586-mingw32"
 which ${cprefix}-gcc || cprefix="/usr/bin/i586-mingw32msvc" # Different name on different Debian variants
+which ${cprefix}-gcc || cprefix="/usr/bin/i686-w64-mingw32" # Debian 8
 export CC="${cprefix}-gcc"
 export CXX="${cprefix}-c++"
 
@@ -31,6 +32,7 @@ cachemoved=$?
 cmake \
 	-D CMAKE_C_COMPILER="$CC" \
 	-D CMAKE_CXX_COMPILER="$CXX" \
+	-D CMAKE_SYSTEM_NAME="Windows" \
 	-D MINGW_CROSS_COMPILE=1 \
 	-D LINKER_LANGUAGE="CXX" \
 	-D BREAKPAD=0 \
@@ -42,4 +44,4 @@ cmakerun=$?
 
 [ "$cmakerun" != "0" ] && echo "cmake failed" && exit 1
 
-make -j4
+make -j8 VERBOSE=1
