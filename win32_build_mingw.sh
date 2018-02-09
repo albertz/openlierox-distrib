@@ -20,7 +20,8 @@ export CC="${cprefix}-gcc"
 export CXX="${cprefix}-c++"
 
 CFLAGS="$CFLAGS -I${mingwdir}/include"
-CFLAGS="$CFLAGS -I${mingwdir}/include/SDL -DMINGW"
+CFLAGS="$CFLAGS -I${mingwdir}/include/SDL"
+CFLAGS="$CFLAGS -mwin32"
 export CFLAGS
 export CXXFLAGS="$CFLAGS"
 
@@ -34,9 +35,9 @@ cmake \
 	-D CMAKE_CXX_COMPILER="$CXX" \
 	-D CMAKE_SYSTEM_NAME="Windows" \
 	-D MINGW_CROSS_COMPILE=1 \
-	-D LINKER_LANGUAGE="CXX" \
 	-D BREAKPAD=0 \
-	-D CMAKE_EXE_LINKER_FLAGS="-L${mingwdir}/lib -u _WinMain@16 -static-libgcc -mwindows" \
+	-D DEBUG=0 \
+	-D CMAKE_EXE_LINKER_FLAGS="-L${mingwdir}/lib -u _WinMain@16 -static-libgcc -static-libstdc++ -mwindows" \
 	"${olxdir}"
 cmakerun=$?
 
