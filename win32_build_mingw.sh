@@ -18,10 +18,12 @@ which ${cprefix}-gcc || cprefix="/usr/bin/i586-mingw32msvc" # Different name on 
 which ${cprefix}-gcc || cprefix="/usr/bin/i686-w64-mingw32" # Debian 8
 export CC="${cprefix}-gcc"
 export CXX="${cprefix}-c++"
+export AR="${cprefix}-gcc-ar"
 
 CFLAGS="$CFLAGS -I${mingwdir}/include"
 CFLAGS="$CFLAGS -I${mingwdir}/include/SDL"
 CFLAGS="$CFLAGS -mwin32"
+CFLAGS="$CFLAGS -flto -O3"
 export CFLAGS
 export CXXFLAGS="$CFLAGS"
 
@@ -33,11 +35,12 @@ cachemoved=$?
 cmake \
 	-D CMAKE_C_COMPILER="$CC" \
 	-D CMAKE_CXX_COMPILER="$CXX" \
+	-D CMAKE_AR="$AR" \
 	-D CMAKE_SYSTEM_NAME="Windows" \
 	-D MINGW_CROSS_COMPILE=1 \
 	-D BREAKPAD=0 \
 	-D DEBUG=0 \
-	-D CMAKE_EXE_LINKER_FLAGS="-L${mingwdir}/lib -u _WinMain@16 -static-libgcc -static-libstdc++ -mwindows" \
+	-D CMAKE_EXE_LINKER_FLAGS="-L${mingwdir}/lib -u _WinMain@16 -static-libgcc -static-libstdc++ -mwindows -flto -O3" \
 	"${olxdir}"
 cmakerun=$?
 
