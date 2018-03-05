@@ -75,11 +75,11 @@ function upload_to_frs() {
 	[ "$group" = "" ] && group="openlierox"
 	[ "$release" = "" ] && release="OpenLieroX $(get_olx_human_version)"
 
-	echo "* creating interactive SF shell"
-	ssh $sfuser@shell.sourceforge.net create
+	#echo "* creating interactive SF shell"
+	#ssh $sfuser@shell.sourceforge.net create
 
 	echo "* uploading $(basename $1) to $group / $release ..."
-	rsync -vP "$1" \
+	rsync -e ssh -vP "$1" \
 	$sfuser@shell.sourceforge.net:"\"/home/frs/project/o/op/openlierox/$group/$release/\""
 }
 

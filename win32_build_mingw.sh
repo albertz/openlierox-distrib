@@ -48,4 +48,9 @@ cmakerun=$?
 
 [ "$cmakerun" != "0" ] && echo "cmake failed" && exit 1
 
-make -j8 VERBOSE=1
+make -j8 VERBOSE=1 || exit 1
+
+cd ..
+rm -rf build-win32
+mkdir -p build-win32
+cp win32build/openlierox.exe build-win32/

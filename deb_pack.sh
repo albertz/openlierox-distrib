@@ -27,6 +27,6 @@ dpkg-buildpackage -rfakeroot -sa -S \
 "(?:^|/)(?:CMakeFiles|build|distrib|tools|Makefile|CMakeCache.txt|cmake)|"\
 "(?:^|/)bin/.*$"
 
-sudo pbuilder build "${olxdir}/../$(get_olx_deb_base_fn).dsc"
+sudo pbuilder build "${olxdir}/../$(get_olx_deb_base_fn).dsc" #--target-arch i386
 
 # result is: /var/cache/pbuilder/result/openlierox_$ver_$arch.deb
