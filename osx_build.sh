@@ -24,11 +24,12 @@ mkdir build-osx && {
 version=$(get_olx_human_version)
 
 cd build-osx
-CFLAGS="-gdwarf-2 -O3 -mmacosx-version-min=10.6 -isysroot /Developer/SDKs/MacOSX10.6.sdk -arch x86_64" # -arch i386 more complicated...
+CFLAGS="-gdwarf-2 -O3 -mmacosx-version-min=10.11 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -arch x86_64" # -arch i386 more complicated...
 
 cmake \
 	-DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CFLAGS" \
 	-DCMAKE_C_FLAGS_RELEASE="" -DCMAKE_CXX_FLAGS_RELEASE="" \
+	-DCMAKE_EXE_LINKER_FLAGS="-F/Library/Frameworks -rpath @executable_path/../Frameworks" \
 	-DDEBUG=Off .
 make -j4 || exit 1
 
@@ -68,8 +69,9 @@ EOF
 
 cp bin/openlierox OpenLieroX.app/Contents/MacOS/ || exit 1
 cp -a $olxdir/share OpenLieroX.app/Contents/Resources || exit 1
-cp -a /Library/Frameworks/SDL.framework OpenLieroX.app/Contents/Frameworks/ || exit 1
-cp -a /Library/Frameworks/SDL_image.framework OpenLieroX.app/Contents/Frameworks/ || exit 1
+for F in SDL SDL_image SDL_mixer Ogg Vorbis FreeType; do
+	cp -a /Library/Frameworks/$F.framework OpenLieroX.app/Contents/Frameworks/ || exit 1
+done
 
 {
 cd OpenLieroX.app/Contents/MacOS
@@ -93,4 +95,5 @@ liblocalcopy openlierox
 }
 
 exit 0
+
 
