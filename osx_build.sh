@@ -69,7 +69,7 @@ EOF
 
 cp bin/openlierox OpenLieroX.app/Contents/MacOS/ || exit 1
 cp -a $olxdir/share OpenLieroX.app/Contents/Resources || exit 1
-for F in SDL SDL_image SDL_mixer Ogg Vorbis FreeType; do
+for F in SDL SDL_mixer Ogg Vorbis FreeType; do
 	cp -a /Library/Frameworks/$F.framework OpenLieroX.app/Contents/Frameworks/ || exit 1
 done
 
