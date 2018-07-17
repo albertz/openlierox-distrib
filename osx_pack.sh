@@ -19,10 +19,10 @@ fi
 
 olxbin="$(get_olx_macosx_bin)"
 
-"${distribdir}"/osx_test_binary.sh "$olxbin" || {
-	echo "Error while testing binary."
-	exit 1
-}
+#"${distribdir}"/osx_test_binary.sh "$olxbin" || {
+#	echo "Error while testing binary."
+#	exit 1
+#}
 
 
 # builds a DMG for OpenLieroX
